@@ -1,10 +1,7 @@
 import itertools
 
-spreadsheet = '''5 9 2 8
-9 4 7 3
-3 8 6 5'''
-
-matrix = [list(map(int, row.split())) for row in spreadsheet.split('\n')]
+with open('data.txt', 'r') as f:
+    matrix = [list(map(int, row.split())) for row in f.readlines()]
 
 answer_part_1 = sum(max(row) - min(row) for row in matrix)
 
