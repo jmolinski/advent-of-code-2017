@@ -1,4 +1,3 @@
-import itertools
 from collections import Counter
 
 with open('data.txt', 'r') as f:
