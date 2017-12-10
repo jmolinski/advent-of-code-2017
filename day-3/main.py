@@ -20,7 +20,7 @@ def neighbours_sum(x, y):
 
 x, y = 0, 0  # pointer vector
 first_value_to_exceed = 0
-for vec_x, vec_y, *m in islice(vectors, square):
+for vec_x, vec_y in islice(vectors, square):
     spiral.append((x, y))
     if square >= first_value_to_exceed:
         first_value_to_exceed = max(1, neighbours_sum(x, y))
