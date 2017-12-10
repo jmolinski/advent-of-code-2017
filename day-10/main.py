@@ -7,7 +7,7 @@ lengths_p2 = [ord(l) for l in raw_lenghts] + [17, 31, 73, 47, 23]
 
 
 def reverse_sublist(lst, pos, sublen):
-    tail, head = max(pos + sublen - len(lst), 0), min(len(lst), pos + sublen)
+    tail, head = max(pos + sublen - 256, 0), min(256, pos + sublen)
     new = list(reversed(lst[pos:head] + lst[:tail]))
     lst[:tail], lst[pos:head] = new[head - pos:], new[:head - pos]
 
@@ -16,7 +16,7 @@ def run_hash(lengths, rounds=1):
     lst, position = list(range(256)), 0
     for skip_size, length in enumerate(lengths * rounds):
         reverse_sublist(lst, position, length)
-        position = (position + length + skip_size) % len(lst)
+        position = (position + length + skip_size) % 256
     return lst
 
 
