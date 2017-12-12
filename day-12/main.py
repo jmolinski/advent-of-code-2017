@@ -11,7 +11,7 @@ def graph(visited, to_visit, vts):
 
 answer_part_1 = len(graph(set(), {0}, set()))
 answer_part_2 = len(set(
-    tuple(sorted(graph(set(), {i}, set()))) for i in range(len(nodes))
+    min(graph(set(), {i}, set())) for i in range(len(nodes))
 ))
 
 print(answer_part_1, answer_part_2)
