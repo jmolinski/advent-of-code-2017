@@ -1,9 +1,6 @@
 from functools import reduce
 import operator as op
-
-raw_lenghts = open('data.txt', 'r').read()
-lengths_p1 = [int(l) for l in raw_lenghts.split(',')]
-lengths_p2 = [ord(l) for l in raw_lenghts] + [17, 31, 73, 47, 23]
+from itertools import count
 
 
 def reverse_sublist(lst, pos, sublen):
@@ -12,7 +9,7 @@ def reverse_sublist(lst, pos, sublen):
     lst[:tail], lst[pos:head] = new[head - pos:], new[:head - pos]
 
 
-def run_hash(lengths, rounds=1):
+def knot_hash(lengths, rounds=1):
     lst, position = list(range(256)), 0
     for skip_size, length in enumerate(lengths * rounds):
         reverse_sublist(lst, position, length)
@@ -25,7 +22,37 @@ def make_dense_hash(lst):
     return ''.join(f'{c:02x}' for c in hashed)
 
 
-answer_part_1 = (lambda st, nd, *_: st * nd)(*run_hash(lengths_p1))
-answer_part_2 = make_dense_hash(run_hash(lengths_p2, rounds=64))
+def hash_binary(hash):
+    return ''.join(f'{int(c, 16):04b}' for c in hash)
+
+
+def count_regions(memory):
+    regions = 0
+    for i, row in memory.items():
+        while '1' in row.values():
+            hide_group(i, [k for k in row.keys() if row[k] == '1'][0], memory)
+            regions += 1
+    return regions
+
+
+def hide_group(x, y, memory):
+    memory[x][y] = '0'
+    for x_v, y_v in ((1, 0), (0, 1), (-1, 0), (0, -1)):
+        if memory.get(x + x_v, {}).get(y + y_v, '0') == '1':
+            hide_group(x + x_v, y + y_v, memory)
+
+
+key_string = open('data.txt', 'r').read()
+
+mem_rows = [[ord(c) for c in l] + [17, 31, 73, 47, 23]
+            for l in [f'{key_string}-{i}' for i in range(128)]]
+
+mem_rows = [list(hash_binary(make_dense_hash(knot_hash(r, rounds=64))))
+            for r in mem_rows]
+
+enumerated_mem_rows = dict(enumerate(dict(enumerate(r)) for r in mem_rows))
+
+answer_part_1 = sum(r.count('1') for r in mem_rows)
+answer_part_2 = count_regions(enumerated_mem_rows)
 
 print(answer_part_1, answer_part_2)
