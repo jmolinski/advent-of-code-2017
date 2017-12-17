@@ -1,6 +1,3 @@
-from functools import lru_cache
-
-
 def reduce_spins(moves):
     moves_wo_spins = []
     spin = 0
@@ -23,7 +20,6 @@ moves = [(m[0], tuple(m[1:].split('/')))
 (total_spin, moves) = reduce_spins(moves)
 
 
-@lru_cache(maxsize=None)
 def dance_round(programs):
     programs = list(programs)
 
