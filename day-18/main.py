@@ -2,7 +2,7 @@ from collections import deque
 
 
 class Executor:
-    def __init__(self, registers, instructions, part_1=False, e_id=0):
+    def __init__(self, registers, instructions, part_1=False):
         self.instructions = instructions
         self.registers = registers.copy()
         self.pos = 0
@@ -10,15 +10,17 @@ class Executor:
         self.last_sent = 0
         self.sent_values = 0
         self.in_buffer = deque()
-        self.e_id = e_id
+
+        def jump_if_positive(x, y):
+            if self.get_val(x) > 0:
+                self.pos = self.pos + self.get_val(y) - 1
 
         self.operations = {
             'set': lambda x, y: self.registers.update({x: self.get_val(y)}),
             'add': lambda x, y: self.registers.update({x: self.get_val(x) + self.get_val(y)}),
             'mul': lambda x, y: self.registers.update({x: self.get_val(x) * self.get_val(y)}),
             'mod': lambda x, y: self.registers.update({x: self.get_val(x) % self.get_val(y)}),
-            'jgz': lambda x, y: setattr(self, 'pos',
-                                        self.pos + self.get_val(y) - 1 if self.get_val(x) > 0 else self.pos)
+            'jgz': jump_if_positive,
         }
 
         if part_1:
@@ -75,8 +77,8 @@ INSTRUCTIONS = [l.split() for l in open('data.txt', 'r').readlines()]
 p1_executor = Executor({}, INSTRUCTIONS, part_1=True)
 p1_executor.exec_till_first_received()
 
-p2_executor_0 = Executor({'p': 0}, INSTRUCTIONS, e_id=0)
-p2_executor_1 = Executor({'p': 1}, INSTRUCTIONS, e_id=1)
+p2_executor_0 = Executor({'p': 0}, INSTRUCTIONS)
+p2_executor_1 = Executor({'p': 1}, INSTRUCTIONS)
 p2_executor_0.set_partner(p2_executor_1)
 p2_executor_1.set_partner(p2_executor_0)
 

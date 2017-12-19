@@ -34,6 +34,7 @@ while True:
 
     routes_without_previous = [r for r in routes if r != (x_prev, y_prev)]
     preferred_route = x + preferred_vector[0], y + preferred_vector[1]
+
     if preferred_route in routes_without_previous:
         x_next, y_next = preferred_route
     else:
