@@ -18,7 +18,6 @@ x_prev, y_prev = 0, [k for k, v in matrix[0].items() if v == '|'][0]
 x, y = x_prev + S[0], y_prev + S[1]
 preferred_vector = S
 
-
 step = 1
 visited_letters = []
 
